@@ -171,7 +171,7 @@ export default function Settings() {
               <UserRound className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-display text-3xl font-bold text-text">Profile & Business</h2>
+              <h2 className="font-display text-2xl font-bold text-text">Profile & Business</h2>
               <p className="mt-2 text-base text-muted">
                 Update the owner identity and core business contact details.
               </p>
@@ -226,7 +226,7 @@ export default function Settings() {
               <SlidersHorizontal className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-display text-3xl font-bold text-text">Preferences</h2>
+              <h2 className="font-display text-2xl font-bold text-text">Preferences</h2>
               <p className="mt-2 text-base text-muted">
                 Control local formatting, report defaults, and your low-stock threshold.
               </p>
@@ -293,7 +293,7 @@ export default function Settings() {
               <BellRing className="h-5 w-5" />
             </div>
             <div>
-              <h2 className="font-display text-3xl font-bold text-text">Notifications</h2>
+              <h2 className="font-display text-2xl font-bold text-text">Notifications</h2>
               <p className="mt-2 text-base text-muted">
                 Pick which alerts and summaries matter most to your team.
               </p>
@@ -386,7 +386,7 @@ export default function Settings() {
                 <Shield className="h-5 w-5" />
               </div>
               <div>
-                <h2 className="font-display text-3xl font-bold text-text">Security</h2>
+                <h2 className="font-display text-2xl font-bold text-text">Security</h2>
                 <p className="mt-2 text-base text-muted">
                   Update your demo password and review admin controls.
                 </p>

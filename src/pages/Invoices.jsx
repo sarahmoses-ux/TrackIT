@@ -140,7 +140,7 @@ export function InvoicesView() {
       <section className="grid gap-6 xl:grid-cols-[0.95fr_1.05fr]">
         <div className="panel-card rounded-[28px] p-6 print-hidden">
           <div className="mb-6">
-            <h2 className="font-display text-3xl font-bold text-text">Create Invoice / Receipt</h2>
+            <h2 className="font-display text-2xl font-bold text-text">Create Invoice / Receipt</h2>
             <p className="mt-2 text-base text-muted">
               Generate a clean customer invoice and printable receipt in one step.
             </p>
@@ -223,7 +223,7 @@ export function InvoicesView() {
               <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Receipt Preview</p>
-                  <h2 className="mt-3 font-display text-3xl font-bold text-text">
+                  <h2 className="mt-3 font-display text-2xl font-bold text-text">
                     {selectedInvoice.invoice_number}
                   </h2>
                   <p className="mt-2 text-sm text-muted">{selectedInvoice.receipt_number}</p>
@@ -297,7 +297,7 @@ export function InvoicesView() {
 
       <section className="panel-card rounded-[28px] p-6 print-hidden">
         <div className="mb-5">
-          <h2 className="font-display text-3xl font-bold text-text">Invoice History</h2>
+          <h2 className="font-display text-2xl font-bold text-text">Invoice History</h2>
           <p className="mt-2 text-base text-muted">Review generated invoices and open any receipt preview.</p>
         </div>
         <Table>

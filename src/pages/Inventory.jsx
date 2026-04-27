@@ -1,5 +1,5 @@
 import { Pencil, Plus, Search, Trash2 } from "lucide-react";
-import { startTransition, useDeferredValue, useMemo, useState } from "react";
+import { startTransition, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { BarcodePreview, QrPreview } from "../components/ui/CodePreview";
 import Badge from "../components/ui/Badge";
 import Button from "../components/ui/Button";
@@ -14,7 +14,49 @@ import { addProduct, deleteProduct, updateProduct } from "../services/mockApi";
 import { formatCurrency } from "../utils/formatCurrency";
 import { resolveProductBarcode } from "../utils/productCodes";
 
-const categories = ["Apparel", "Footwear", "Accessories", "Electronics", "Food & Beverage"];
+const categories = [
+  "Apparel",
+  "Footwear",
+  "Accessories",
+  "Electronics",
+  "Food & Beverage",
+  "Health & Beauty",
+  "Sports & Fitness",
+  "Home & Living",
+  "Books & Stationery",
+  "Toys & Games",
+  "Automotive",
+  "Office Supplies",
+  "Jewelry",
+  "Baby & Kids",
+  "Pet Supplies",
+];
+
+const CATEGORY_PREFIXES = {
+  "Apparel": "APP",
+  "Footwear": "FTW",
+  "Accessories": "ACC",
+  "Electronics": "ELC",
+  "Food & Beverage": "FDB",
+  "Health & Beauty": "HLB",
+  "Sports & Fitness": "SPT",
+  "Home & Living": "HML",
+  "Books & Stationery": "BKS",
+  "Toys & Games": "TOY",
+  "Automotive": "AUT",
+  "Office Supplies": "OFS",
+  "Jewelry": "JWL",
+  "Baby & Kids": "BBY",
+  "Pet Supplies": "PET",
+};
+
+function generateSku(name, category, existingProducts) {
+  const prefix = CATEGORY_PREFIXES[category] ?? category.replace(/[^A-Za-z]/g, "").slice(0, 3).toUpperCase();
+  const words = name.trim().split(/\s+/).filter(Boolean);
+  const keyword = (words[words.length - 1] ?? "XX").slice(0, 2).toUpperCase().padEnd(2, "X");
+  const next = String(existingProducts.length + 1).padStart(3, "0");
+  return `${prefix}-${keyword}-${next}`;
+}
 
 const emptyForm = {
   barcode: "",
@@ -41,7 +83,13 @@ export default function Inventory() {
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
+  const [skuTouched, setSkuTouched] = useState(false);
   const deferredQuery = useDeferredValue(query);
+
+  useEffect(() => {
+    if (editingProduct || skuTouched || !form.name.trim()) return;
+    setForm((current) => ({ ...current, sku: generateSku(form.name, form.category, products) }));
+  }, [form.name, form.category, editingProduct, skuTouched, products]);
 
   const filteredProducts = useMemo(() => {
     const search = deferredQuery.trim().toLowerCase();
@@ -60,6 +108,7 @@ export default function Inventory() {
     setErrors({});
     setEditingProduct(null);
     setForm(emptyForm);
+    setSkuTouched(false);
     setModalOpen(false);
   };
 
@@ -67,6 +116,7 @@ export default function Inventory() {
     setEditingProduct(null);
     setErrors({});
     setForm(emptyForm);
+    setSkuTouched(false);
     setModalOpen(true);
   };
 
@@ -170,7 +220,7 @@ export default function Inventory() {
     <div className="space-y-6">
       <section className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-3">
-          <h2 className="font-display text-3xl font-bold text-text">Inventory</h2>
+          <h2 className="font-display text-2xl font-bold text-text">Inventory</h2>
           <Badge tone="primary">{products.length} products</Badge>
         </div>
         <div className="grid gap-3 md:grid-cols-[1.1fr_0.8fr_auto]">
@@ -220,11 +270,11 @@ export default function Inventory() {
                   <td className="px-4 py-4">
                     <Badge tone={getStockTone(product.stock)}>{product.stock} units</Badge>
                   </td>
-                  <td className="px-4 py-4 text-sm text-muted">{formatCurrency(product.cost_price)}</td>
-                  <td className="px-4 py-4 text-sm text-muted">{formatCurrency(product.selling_price)}</td>
-                  <td className="px-4 py-4 text-sm font-semibold text-primary">{computedMargin.toFixed(1)}%</td>
-                  <td className="px-4 py-4">
-                    <div className="flex flex-wrap items-center gap-2">
+                  <td className="px-4 py-4 text-sm tabular-nums text-muted">{formatCurrency(product.cost_price)}</td>
+                  <td className="px-4 py-4 text-sm tabular-nums text-muted">{formatCurrency(product.selling_price)}</td>
+                  <td className="px-4 py-4 text-sm tabular-nums font-semibold text-primary">{computedMargin.toFixed(1)}%</td>
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-2">
                       <Button
                         aria-label={`Edit ${product.name}`}
                         className="h-10 rounded-full border-border bg-slate-50 px-3 text-slate-700 hover:bg-slate-100"
@@ -255,7 +305,7 @@ export default function Inventory() {
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-light text-primary">
             <Plus className="h-8 w-8" />
           </div>
-          <h3 className="mt-6 font-display text-3xl font-semibold text-text">Add your first product</h3>
+          <h3 className="mt-6 font-display text-2xl font-semibold text-text">Add your first product</h3>
           <p className="mt-3 max-w-md text-base text-muted">
             Start your inventory list with clear SKUs, pricing, and stock levels.
           </p>
@@ -300,7 +350,10 @@ export default function Inventory() {
             <Input
               error={errors.sku}
               label="SKU*"
-              onChange={(event) => setForm((current) => ({ ...current, sku: event.target.value }))}
+              onChange={(event) => {
+                setSkuTouched(true);
+                setForm((current) => ({ ...current, sku: event.target.value }));
+              }}
               value={form.sku}
             />
             <Input

@@ -1,7 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import AuthGuard from "./components/auth/AuthGuard";
 import AppLayout from "./components/layout/AppLayout";
-import ErrorBoundary from "./components/ui/ErrorBoundary";
 import { ToastProvider } from "./context/ToastContext";
 import Dashboard from "./pages/Dashboard";
 import Insights from "./pages/Insights";
@@ -18,31 +17,29 @@ import Team from "./pages/Team";
 
 export default function App() {
   return (
-    <ErrorBoundary>
-      <ToastProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route element={<AuthGuard />}>
-              <Route element={<AppLayout />}>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/inventory" element={<Inventory />} />
-                <Route path="/sales" element={<Sales />} />
-                <Route path="/invoices" element={<Navigate replace to="/sales?view=invoices" />} />
-                <Route path="/returns" element={<Navigate replace to="/sales?view=returns" />} />
-                <Route path="/insights" element={<Insights />} />
-                <Route path="/team" element={<Team />} />
-                <Route path="/reports" element={<Reports />} />
-                <Route path="/integrations" element={<Integrations />} />
-                <Route path="/settings" element={<Settings />} />
-              </Route>
+    <ToastProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route element={<AuthGuard />}>
+            <Route element={<AppLayout />}>
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/inventory" element={<Inventory />} />
+              <Route path="/sales" element={<Sales />} />
+              <Route path="/invoices" element={<Navigate replace to="/sales?view=invoices" />} />
+              <Route path="/returns" element={<Navigate replace to="/sales?view=returns" />} />
+              <Route path="/insights" element={<Insights />} />
+              <Route path="/team" element={<Team />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="/integrations" element={<Integrations />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </ToastProvider>
-    </ErrorBoundary>
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </ToastProvider>
   );
 }

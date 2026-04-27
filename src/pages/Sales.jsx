@@ -172,7 +172,7 @@ function SalesLogView() {
     <div className="space-y-6">
       <section className="panel-card rounded-[28px] p-6">
         <div className="mb-6">
-          <h2 className="font-display text-3xl font-bold text-text">Record New Sale</h2>
+          <h2 className="font-display text-2xl font-bold text-text">Record New Sale</h2>
           <p className="mt-2 text-base text-muted">
             Pick a product, scan or enter a barcode, review profit, and save the transaction.
           </p>
@@ -260,7 +260,7 @@ function SalesLogView() {
       <section className="panel-card rounded-[28px] p-6">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h2 className="font-display text-3xl font-bold text-text">Sales History</h2>
+            <h2 className="font-display text-2xl font-bold text-text">Sales History</h2>
             <p className="mt-2 text-base text-muted">Review transactions, apply date filters, and export CSV.</p>
           </div>
           <div className="grid gap-3 md:grid-cols-4">

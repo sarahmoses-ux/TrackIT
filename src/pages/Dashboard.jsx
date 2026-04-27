@@ -114,8 +114,8 @@ export default function Dashboard() {
         <div className="panel-card rounded-3xl p-5">
           <div className="mb-5 flex items-center justify-between gap-3">
             <div>
-              <h2 className="font-display text-2xl font-semibold text-text">Recent Sales</h2>
-              <p className="text-sm text-muted">Your latest five transactions.</p>
+              <h2 className="font-display text-xl font-semibold text-text">Recent Sales</h2>
+              <p className="text-base text-muted">Your latest five transactions.</p>
             </div>
             <Link className="text-sm font-semibold text-primary" to="/sales">
               View all sales →
@@ -145,8 +145,8 @@ export default function Dashboard() {
 
         <div className="space-y-4">
           <div className="panel-card rounded-3xl p-5">
-            <h2 className="font-display text-2xl font-semibold text-text">Low Stock Cards</h2>
-            <p className="mt-1 text-sm text-muted">Reorder suggestions based on current stock levels.</p>
+            <h2 className="font-display text-xl font-semibold text-text">Low Stock Cards</h2>
+            <p className="mt-1 text-base text-muted">Reorder suggestions based on current stock levels.</p>
           </div>
           {lowStock.map((product) => {
             const insight = insightsById.get(product.id);
@@ -154,7 +154,7 @@ export default function Dashboard() {
               <div key={product.id} className="rounded-3xl border border-amber-200 bg-amber-50 p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="font-display text-xl font-semibold text-amber-950">{product.name}</h3>
+                    <h3 className="font-display text-lg font-semibold text-amber-950">{product.name}</h3>
                     <p className="mt-1 text-sm text-amber-800">{product.category}</p>
                   </div>
                   <Badge tone="danger">{product.stock} left</Badge>
