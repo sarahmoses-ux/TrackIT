@@ -202,7 +202,7 @@ export default function Team() {
         <div className="panel-card rounded-[28px] p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <h2 className="font-display text-3xl font-bold text-text">Team Management</h2>
+              <h2 className="font-display text-2xl font-bold text-text">Team Management</h2>
               <p className="mt-2 text-base text-muted">
                 Invite staff, assign access, and keep track of who can work inside TrackIt.
               </p>
@@ -230,7 +230,7 @@ export default function Team() {
         </div>
 
         <div className="panel-card rounded-[28px] p-6">
-          <h2 className="font-display text-2xl font-semibold text-text">Access Levels</h2>
+          <h2 className="font-display text-xl font-semibold text-text">Access Levels</h2>
           <div className="mt-4 space-y-3">
             <div className="rounded-2xl bg-primary-light/60 p-4">
               <p className="text-sm font-semibold text-primary">Full Access</p>
@@ -273,17 +273,23 @@ export default function Team() {
                   <td className="px-4 py-4 text-sm text-muted">{formatDate(member.joined_at)}</td>
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2">
-                      <Button className="h-10 w-10 rounded-full px-0" onClick={() => openEdit(member)} variant="ghost">
+                      <button
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-muted transition-colors hover:bg-primary-light hover:text-primary"
+                        onClick={() => openEdit(member)}
+                        title="Edit member"
+                        type="button"
+                      >
                         <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        className="h-10 w-10 rounded-full px-0"
+                      </button>
+                      <button
+                        className="flex h-9 w-9 items-center justify-center rounded-full bg-red-50 text-danger transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-40"
                         disabled={member.role === "Owner"}
                         onClick={() => handleRemove(member)}
-                        variant="ghost"
+                        title="Remove member"
+                        type="button"
                       >
-                        <Trash2 className="h-4 w-4 text-danger" />
-                      </Button>
+                        <Trash2 className="h-4 w-4" />
+                      </button>
                     </div>
                   </td>
                 </tr>

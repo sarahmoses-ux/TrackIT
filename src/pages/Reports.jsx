@@ -19,8 +19,8 @@ const reportTabs = ["Inventory Report", "Sales Report"];
 function SummaryCard({ label, value }) {
   return (
     <div className="rounded-3xl border border-border bg-white p-5 shadow-card">
-      <p className="text-sm text-muted">{label}</p>
-      <p className="mt-3 font-display text-3xl font-bold text-text">{value}</p>
+      <p className="text-base text-muted">{label}</p>
+      <p className="mt-3 font-display text-2xl font-bold text-text">{value}</p>
     </div>
   );
 }
@@ -145,7 +145,7 @@ export default function Reports() {
           <div className="panel-card rounded-[28px] p-6">
             <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h2 className="font-display text-3xl font-bold text-text">Inventory Report</h2>
+                <h2 className="font-display text-2xl font-bold text-text">Inventory Report</h2>
                 <p className="mt-2 text-base text-muted">Filter stock and export a clean inventory snapshot.</p>
               </div>
               <div className="grid gap-3 md:grid-cols-3">
@@ -217,7 +217,7 @@ export default function Reports() {
           <div className="panel-card rounded-[28px] p-6">
             <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
               <div>
-                <h2 className="font-display text-3xl font-bold text-text">Sales Report</h2>
+                <h2 className="font-display text-2xl font-bold text-text">Sales Report</h2>
                 <p className="mt-2 text-base text-muted">Filter transactions, review totals, then export or print.</p>
               </div>
               <div className="grid gap-3 md:grid-cols-5">

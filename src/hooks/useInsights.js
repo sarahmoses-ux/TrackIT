@@ -24,13 +24,11 @@ export default function useInsights() {
         getProducts()
       ]);
 
-      // Generate AI insights in parallel
-      const [forecastData, trendsData, predictionsData, summaryData] = await Promise.all([
-        generateProfitForecast(salesData, productsData),
-        generateSalesTrends(salesData, productsData),
-        generateLowStockPredictions(salesData, productsData),
-        generateAIInsightsSummary(salesData, productsData, [])
-      ]);
+      // Sequence AI calls to stay within the free-tier TPM window
+      const forecastData = await generateProfitForecast(salesData, productsData);
+      const trendsData = await generateSalesTrends(salesData, productsData);
+      const predictionsData = await generateLowStockPredictions(salesData, productsData);
+      const summaryData = await generateAIInsightsSummary(salesData, productsData);
 
       // Transform predictions to match expected format
       const insightsData = predictionsData.map(prediction => ({

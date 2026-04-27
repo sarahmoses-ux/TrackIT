@@ -13,10 +13,10 @@ export default function ProfitForecastChart({ data }) {
   return (
     <div className="panel-card rounded-3xl p-5">
       <div className="mb-4">
-        <h3 className="font-display text-xl font-semibold text-text">
+        <h3 className="font-display text-lg font-semibold text-text">
           Projected Profit - Next 30 Days
         </h3>
-        <p className="text-sm text-muted">Forecasted from recent product performance patterns.</p>
+        <p className="text-base text-muted">Forecasted from recent product performance patterns.</p>
       </div>
       <div className="h-[320px] w-full">
         <ResponsiveContainer>

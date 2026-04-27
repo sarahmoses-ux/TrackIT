@@ -90,7 +90,7 @@ export default function Integrations() {
                 <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">
                   {integration.category}
                 </p>
-                <h2 className="mt-3 font-display text-3xl font-bold text-text">{integration.name}</h2>
+                <h2 className="mt-3 font-display text-2xl font-bold text-text">{integration.name}</h2>
                 <p className="mt-3 text-base leading-7 text-muted">{integration.description}</p>
               </div>
               <Badge tone={integration.status === "Connected" ? "success" : "neutral"}>

@@ -24,8 +24,8 @@ export default function Header({ alertCount, leftSlot, lowStockProducts = [], ti
       <div className="flex items-center gap-3">
         {leftSlot}
         <div>
-          <h1 className="font-display text-2xl font-bold text-text">{title}</h1>
-          <p className="hidden text-sm text-muted sm:block">
+          <h1 className="font-display text-xl font-bold text-text">{title}</h1>
+          <p className="hidden text-base text-muted sm:block">
             Welcome back, {user?.name?.split(" ")[0] ?? "Demo User"}.
           </p>
         </div>
@@ -50,7 +50,7 @@ export default function Header({ alertCount, leftSlot, lowStockProducts = [], ti
             <div className="absolute right-0 top-14 z-40 w-[min(24rem,calc(100vw-2rem))] animate-slide-in rounded-[24px] border border-border bg-card p-4 shadow-modal">
               <div className="flex items-center justify-between gap-3 border-b border-border pb-3">
                 <div>
-                  <h3 className="font-display text-xl font-semibold text-text">Notifications</h3>
+                  <h3 className="font-display text-lg font-semibold text-text">Notifications</h3>
                   <p className="text-sm text-muted">
                     {alertCount ? `${alertCount} low-stock alerts` : "Everything looks healthy"}
                   </p>

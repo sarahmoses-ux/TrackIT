@@ -105,7 +105,7 @@ export function getWeeklyRevenue(sales, weeks = 8) {
       })
       .reduce((sum, sale) => sum + getSaleRevenue(sale), 0);
     results.push({
-      label: formatDate(start, { day: "numeric", month: "short" }),
+      label: start.toLocaleDateString("en-NG", { day: "numeric", month: "short" }),
       value,
     });
   }

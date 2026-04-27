@@ -1,211 +1,296 @@
-// const GROK_API_KEY = process.env.GROK_API_KEY;
-// const GROK_API_URL = process.env.GROK_API_URL;
+const API_KEY = import.meta.env.VITE_GROK_API_KEY;
+const API_URL = import.meta.env.VITE_GROK_API_URL;
+const MODEL = "llama-3.1-8b-instant";
 
-// async function callGrokAPI(messages) {
-//   const response = await fetch(GROK_API_URL, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       "Authorization": `Bearer ${GROK_API_KEY}`,
-//     },
-//     body: JSON.stringify({
-//       model: "grok-beta",
-//       messages,
-//       max_tokens: 1000,
-//       temperature: 0.7,
-//     }),
-//   });
+// Strip markdown code fences that Grok sometimes wraps around JSON responses
+function extractJSON(text) {
+  const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+  return fenced ? fenced[1].trim() : text.trim();
+}
 
-//   if (!response.ok) {
-//     throw new Error(`Grok API error: ${response.status} ${response.statusText}`);
-//   }
+async function callGrok(messages) {
+  if (!API_KEY || API_KEY.startsWith("your_")) {
+    throw new Error("VITE_GROK_API_KEY is not configured in .env");
+  }
 
-//   const data = await response.json();
-//   return data.choices[0].message.content;
-// }
+  const response = await fetch(API_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a business analytics AI. Always respond with raw JSON only — no markdown, no explanation, no code fences.",
+        },
+        ...messages,
+      ],
+      max_tokens: 1500,
+      temperature: 0.3,
+    }),
+  });
 
-// export async function generateProfitForecast(sales, products) {
-//   const salesData = sales.slice(-30); // Last 30 sales for forecasting
-//   const productsData = products;
+  if (!response.ok) {
+    const body = await response.text().catch(() => response.statusText);
+    throw new Error(`Grok API ${response.status}: ${body}`);
+  }
 
-//   const prompt = `Based on the following sales and product data, generate a 30-day profit forecast. Return ONLY a JSON array of 30 objects, each with a "profit" number representing daily profit forecast.
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
 
-// Sales data (last 30 transactions):
-// ${JSON.stringify(salesData, null, 2)}
+// Slim down product data sent to the API — we don't need created_at or sku
+function slimProducts(products) {
+  return products.map(({ id, name, category, cost_price, selling_price, stock }) => ({
+    id,
+    name,
+    category,
+    cost_price,
+    selling_price,
+    stock,
+  }));
+}
 
-// Products data:
-// ${JSON.stringify(productsData, null, 2)}
+// Slim down sales data
+function slimSales(sales) {
+  return sales.map(({ product_id, quantity, sale_price, total_profit, timestamp }) => ({
+    product_id,
+    quantity,
+    sale_price,
+    total_profit,
+    timestamp,
+  }));
+}
 
-// Analyze the sales patterns, profit margins, and trends to create a realistic 30-day profit forecast. Consider seasonal patterns, product performance, and growth trends.`;
+/**
+ * Returns a 30-element array: [{ label: "28 Apr", profit: 12000 }, ...]
+ */
+export async function generateProfitForecast(sales, products) {
+  const prompt = `Given these sales transactions and product catalog, generate a 30-day profit forecast starting from tomorrow.
 
-//   try {
-//     const response = await callGrokAPI([{ role: "user", content: prompt }]);
-//     const forecastData = JSON.parse(response);
+Sales (last 30):
+${JSON.stringify(slimSales(sales.slice(-30)))}
 
-//     if (!Array.isArray(forecastData) || forecastData.length !== 30) {
-//       throw new Error("Invalid forecast data format");
-//     }
+Products:
+${JSON.stringify(slimProducts(products))}
 
-//     return forecastData.map((item, index) => ({
-//       label: new Date(Date.now() + (index + 1) * 24 * 60 * 60 * 1000).toLocaleDateString("en-NG", {
-//         day: "numeric",
-//         month: "short"
-//       }),
-//       profit: Math.max(0, Math.round(item.profit || 0)),
-//     }));
-//   } catch (error) {
-//     console.error("Error generating profit forecast:", error);
-//     // Fallback to mock data
-//     return Array.from({ length: 30 }, (_, index) => ({
-//       label: new Date(Date.now() + (index + 1) * 24 * 60 * 60 * 1000).toLocaleDateString("en-NG", {
-//         day: "numeric",
-//         month: "short"
-//       }),
-//       profit: Math.round(25000 + Math.sin(index / 3.4) * 5000 + (index % 5) * 1000),
-//     }));
-//   }
-// }
+Return a JSON array of exactly 30 objects. Each object must have:
+- "label": date string formatted as "D MMM" (e.g. "28 Apr")
+- "profit": integer, the forecasted profit in NGN for that day
 
-// export async function generateSalesTrends(sales, products) {
-//   const productsById = new Map(products.map(p => [p.id, p]));
+Base the forecast on the sales velocity and profit margins visible in the data.`;
 
-//   const prompt = `Analyze the following sales data and provide insights about sales trends. Return ONLY a JSON object with these exact keys:
-// - "weekly_summary": A string describing the weekly sales performance
-// - "top_performing_products": Array of up to 5 product names that are performing best
-// - "trend_direction": Either "increasing", "decreasing", or "stable"
-// - "growth_rate": A number representing the growth rate percentage
-// - "recommendations": Array of 2-3 actionable recommendations
+  try {
+    const raw = await callGrok([{ role: "user", content: prompt }]);
+    const parsed = JSON.parse(extractJSON(raw));
 
-// Sales data:
-// ${JSON.stringify(sales, null, 2)}
+    if (!Array.isArray(parsed) || parsed.length !== 30) {
+      throw new Error("Unexpected forecast shape");
+    }
 
-// Products data:
-// ${JSON.stringify(products, null, 2)}
+    const startMs = Date.now();
+    return parsed.map((item, index) => ({
+      label:
+        item.label ||
+        new Date(startMs + (index + 1) * 86400000).toLocaleDateString("en-NG", {
+          day: "numeric",
+          month: "short",
+        }),
+      profit: Math.max(0, Math.round(Number(item.profit) || 0)),
+    }));
+  } catch (error) {
+    console.warn("Profit forecast fallback:", error.message);
+    return Array.from({ length: 30 }, (_, index) => ({
+      label: new Date(Date.now() + (index + 1) * 86400000).toLocaleDateString("en-NG", {
+        day: "numeric",
+        month: "short",
+      }),
+      profit: Math.round(25000 + Math.sin(index / 3.4) * 5000 + (index % 5) * 1200),
+    }));
+  }
+}
 
-// Focus on revenue trends, product performance, and actionable insights for business growth.`;
+/**
+ * Returns:
+ * {
+ *   weekly_summary: string,
+ *   top_performing_products: string[],
+ *   trend_direction: "increasing" | "decreasing" | "stable",
+ *   growth_rate: number,
+ *   recommendations: string[]
+ * }
+ */
+export async function generateSalesTrends(sales, products) {
+  const prompt = `Analyze these sales and return a JSON object with exactly these keys:
+- "weekly_summary": one sentence describing recent sales performance
+- "top_performing_products": array of up to 5 product names ranked by revenue
+- "trend_direction": one of "increasing", "decreasing", or "stable"
+- "growth_rate": number (percentage, e.g. 8.5 means 8.5% growth)
+- "recommendations": array of 2-3 short, actionable strings
 
-//   try {
-//     const response = await callGrokAPI([{ role: "user", content: prompt }]);
-//     const trendsData = JSON.parse(response);
+Sales data:
+${JSON.stringify(slimSales(sales))}
 
-//     return {
-//       weekly_summary: trendsData.weekly_summary || "Sales show consistent performance with opportunities for growth.",
-//       top_performing_products: trendsData.top_performing_products || [],
-//       trend_direction: trendsData.trend_direction || "stable",
-//       growth_rate: trendsData.growth_rate || 0,
-//       recommendations: trendsData.recommendations || [],
-//     };
-//   } catch (error) {
-//     console.error("Error generating sales trends:", error);
-//     return {
-//       weekly_summary: "Sales data shows steady performance with room for optimization.",
-//       top_performing_products: products.slice(0, 3).map(p => p.name),
-//       trend_direction: "stable",
-//       growth_rate: 5.2,
-//       recommendations: [
-//         "Focus on high-margin products",
-//         "Implement targeted marketing campaigns",
-//         "Monitor inventory levels closely"
-//       ],
-//     };
-//   }
-// }
+Products:
+${JSON.stringify(slimProducts(products))}`;
 
-// export async function generateLowStockPredictions(sales, products) {
-//   const productsById = new Map(products.map(p => [p.id, p]));
+  try {
+    const raw = await callGrok([{ role: "user", content: prompt }]);
+    const parsed = JSON.parse(extractJSON(raw));
 
-//   const prompt = `Based on sales velocity and current stock levels, predict when products will run low on stock. Return ONLY a JSON array of objects with these exact properties for products likely to run out within 30 days:
-// - "product_id": The product ID
-// - "predicted_low_stock_date": ISO date string when stock will be low
-// - "recommended_reorder_qty": Recommended quantity to reorder
-// - "confidence": A number 0-100 indicating prediction confidence
+    return {
+      weekly_summary:
+        parsed.weekly_summary || "Sales show consistent performance with opportunities for growth.",
+      top_performing_products: Array.isArray(parsed.top_performing_products)
+        ? parsed.top_performing_products
+        : products.slice(0, 3).map((p) => p.name),
+      trend_direction: ["increasing", "decreasing", "stable"].includes(parsed.trend_direction)
+        ? parsed.trend_direction
+        : "stable",
+      growth_rate: Number(parsed.growth_rate) || 0,
+      recommendations: Array.isArray(parsed.recommendations)
+        ? parsed.recommendations
+        : ["Focus on high-margin products", "Monitor inventory levels closely"],
+    };
+  } catch (error) {
+    console.warn("Sales trends fallback:", error.message);
+    return {
+      weekly_summary: "Sales data shows steady performance with room for optimisation.",
+      top_performing_products: products.slice(0, 3).map((p) => p.name),
+      trend_direction: "stable",
+      growth_rate: 5.2,
+      recommendations: [
+        "Focus on high-margin products",
+        "Run targeted promotions on slow-moving stock",
+        "Monitor inventory levels ahead of restocks",
+      ],
+    };
+  }
+}
 
-// Sales data:
-// ${JSON.stringify(sales, null, 2)}
+/**
+ * Returns an array of predictions:
+ * [{ product_id, predicted_low_stock_date, recommended_reorder_qty, confidence }, ...]
+ *
+ * Only products predicted to run out within 30 days are included.
+ */
+export async function generateLowStockPredictions(sales, products) {
+  const prompt = `Based on the sales velocity and current stock levels, predict which products will run low within 30 days.
 
-// Products data:
-// ${JSON.stringify(products, null, 2)}
+Sales data:
+${JSON.stringify(slimSales(sales))}
 
-// Calculate sales velocity (units sold per day) for each product and predict low stock dates based on current inventory levels. Only include products that will run low within 30 days.`;
+Products (with current stock):
+${JSON.stringify(slimProducts(products))}
 
-//   try {
-//     const response = await callGrokAPI([{ role: "user", content: prompt }]);
-//     const predictions = JSON.parse(response);
+Return a JSON array. Each object must have:
+- "product_id": string (use the id from products)
+- "predicted_low_stock_date": ISO 8601 date string
+- "recommended_reorder_qty": integer
+- "confidence": integer 0–100
 
-//     if (!Array.isArray(predictions)) {
-//       throw new Error("Invalid predictions format");
-//     }
+Only include products that will likely run out within 30 days. Return an empty array if none qualify.`;
 
-//     return predictions.map(prediction => ({
-//       product_id: prediction.product_id,
-//       predicted_low_stock_date: prediction.predicted_low_stock_date,
-//       recommended_reorder_qty: Math.max(1, Math.round(prediction.recommended_reorder_qty || 10)),
-//       confidence: Math.min(100, Math.max(0, prediction.confidence || 80)),
-//     }));
-//   } catch (error) {
-//     console.error("Error generating low stock predictions:", error);
-//     // Fallback: predict for products with low stock
-//     return products
-//       .filter(p => p.stock <= 10)
-//       .map(p => ({
-//         product_id: p.id,
-//         predicted_low_stock_date: new Date(Date.now() + (p.stock * 2 + 7) * 24 * 60 * 60 * 1000).toISOString(),
-//         recommended_reorder_qty: Math.max(10, Math.round(p.stock * 1.5)),
-//         confidence: 75,
-//       }));
-//   }
-// }
+  try {
+    const raw = await callGrok([{ role: "user", content: prompt }]);
+    const parsed = JSON.parse(extractJSON(raw));
 
-// export async function generateAIInsightsSummary(sales, products, insights) {
-//   const prompt = `Provide a comprehensive AI-powered business insights summary based on the following data. Return ONLY a JSON object with these exact keys:
-// - "business_overview": A brief overview of the business performance
-// - "key_strengths": Array of 2-3 key strengths
-// - "areas_for_improvement": Array of 2-3 areas that need attention
-// - "actionable_recommendations": Array of 3-4 specific, actionable recommendations
-// - "profit_forecast_summary": A summary of profit outlook
-// - "risk_assessment": Brief assessment of business risks
+    if (!Array.isArray(parsed)) throw new Error("Expected array");
 
-// Sales data:
-// ${JSON.stringify(sales.slice(-20), null, 2)}
+    return parsed.map((item) => ({
+      product_id: item.product_id,
+      predicted_low_stock_date: item.predicted_low_stock_date,
+      recommended_reorder_qty: Math.max(1, Math.round(Number(item.recommended_reorder_qty) || 10)),
+      confidence: Math.min(100, Math.max(0, Number(item.confidence) || 75)),
+    }));
+  } catch (error) {
+    console.warn("Low stock predictions fallback:", error.message);
+    return products
+      .filter((p) => p.stock <= 10)
+      .map((p) => ({
+        product_id: p.id,
+        predicted_low_stock_date: new Date(
+          Date.now() + (p.stock * 2 + 7) * 86400000,
+        ).toISOString(),
+        recommended_reorder_qty: Math.max(10, Math.round(p.stock * 1.5)),
+        confidence: 75,
+      }));
+  }
+}
 
-// Products data:
-// ${JSON.stringify(products, null, 2)}
+/**
+ * Returns:
+ * {
+ *   business_overview: string,
+ *   key_strengths: string[],
+ *   areas_for_improvement: string[],
+ *   actionable_recommendations: string[],
+ *   profit_forecast_summary: string,
+ *   risk_assessment: string
+ * }
+ */
+export async function generateAIInsightsSummary(sales, products) {
+  const prompt = `You are analysing a retail business. Return a JSON object with exactly these keys:
+- "business_overview": 1–2 sentences summarising overall performance
+- "key_strengths": array of 2–3 short strings
+- "areas_for_improvement": array of 2–3 short strings
+- "actionable_recommendations": array of 3–4 specific, actionable strings
+- "profit_forecast_summary": 1 sentence on profit outlook
+- "risk_assessment": 1 sentence on key risks
 
-// Insights data:
-// ${JSON.stringify(insights, null, 2)}
+Sales (recent 20):
+${JSON.stringify(slimSales(sales.slice(-20)))}
 
-// Provide intelligent, data-driven insights that would be valuable for a small business owner.`;
+Products:
+${JSON.stringify(slimProducts(products))}`;
 
-//   try {
-//     const response = await callGrokAPI([{ role: "user", content: prompt }]);
-//     const summary = JSON.parse(response);
+  try {
+    const raw = await callGrok([{ role: "user", content: prompt }]);
+    const parsed = JSON.parse(extractJSON(raw));
 
-//     return {
-//       business_overview: summary.business_overview || "Your business shows steady performance with opportunities for growth.",
-//       key_strengths: summary.key_strengths || ["Consistent sales performance", "Good product margins"],
-//       areas_for_improvement: summary.areas_for_improvement || ["Inventory management", "Marketing optimization"],
-//       actionable_recommendations: summary.actionable_recommendations || [
-//         "Focus on high-margin products",
-//         "Implement inventory tracking",
-//         "Expand marketing efforts"
-//       ],
-//       profit_forecast_summary: summary.profit_forecast_summary || "Profit outlook is positive with potential for growth.",
-//       risk_assessment: summary.risk_assessment || "Low to moderate risk with good diversification.",
-//     };
-//   } catch (error) {
-//     console.error("Error generating AI insights summary:", error);
-//     return {
-//       business_overview: "Your retail business demonstrates consistent performance with room for strategic improvements.",
-//       key_strengths: ["Diverse product portfolio", "Established customer base", "Competitive pricing"],
-//       areas_for_improvement: ["Inventory optimization", "Sales trend analysis", "Customer retention"],
-//       actionable_recommendations: [
-//         "Implement automated inventory alerts",
-//         "Focus marketing on top-performing products",
-//         "Analyze customer buying patterns",
-//         "Optimize pricing strategy"
-//       ],
-//       profit_forecast_summary: "Profit projections show positive growth trajectory with proper inventory management.",
-//       risk_assessment: "Moderate risk level with opportunities to reduce stock-out incidents.",
-//     };
-//   }
-// }
+    return {
+      business_overview:
+        parsed.business_overview ||
+        "Your business shows steady performance with opportunities for growth.",
+      key_strengths: Array.isArray(parsed.key_strengths)
+        ? parsed.key_strengths
+        : ["Consistent sales performance", "Good product margins"],
+      areas_for_improvement: Array.isArray(parsed.areas_for_improvement)
+        ? parsed.areas_for_improvement
+        : ["Inventory management", "Marketing optimisation"],
+      actionable_recommendations: Array.isArray(parsed.actionable_recommendations)
+        ? parsed.actionable_recommendations
+        : ["Focus on high-margin products", "Implement inventory alerts"],
+      profit_forecast_summary:
+        parsed.profit_forecast_summary ||
+        "Profit outlook is positive with potential for growth.",
+      risk_assessment:
+        parsed.risk_assessment || "Low to moderate risk with good diversification.",
+    };
+  } catch (error) {
+    console.warn("AI summary fallback:", error.message);
+    return {
+      business_overview:
+        "Your retail business demonstrates consistent performance with room for strategic improvements.",
+      key_strengths: ["Diverse product portfolio", "Established customer base", "Competitive pricing"],
+      areas_for_improvement: [
+        "Inventory optimisation",
+        "Sales trend analysis",
+        "Customer retention",
+      ],
+      actionable_recommendations: [
+        "Implement automated inventory alerts",
+        "Focus marketing on top-performing products",
+        "Analyse customer buying patterns",
+        "Optimise pricing strategy for slow movers",
+      ],
+      profit_forecast_summary:
+        "Profit projections show a positive growth trajectory with proper inventory management.",
+      risk_assessment: "Moderate risk level with opportunities to reduce stock-out incidents.",
+    };
+  }
+}
