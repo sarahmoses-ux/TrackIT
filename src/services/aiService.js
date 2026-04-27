@@ -1,5 +1,5 @@
-const GROK_API_KEY = "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";
-const GROK_API_URL = "https://api.grok.x.ai/v1/chat/completions";
+const GROK_API_KEY = process.env.GROK_API_KEY;
+const GROK_API_URL = process.env.GROK_API_URL;
 
 async function callGrokAPI(messages) {
   const response = await fetch(GROK_API_URL, {
