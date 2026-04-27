@@ -1,0 +1,44 @@
+[
+  {
+    "id": "inv-001",
+    "invoice_number": "INV-2026-001",
+    "receipt_number": "RCT-2026-001",
+    "customer_name": "Grace Fashion House",
+    "customer_email": "orders@gracefashion.ng",
+    "customer_phone": "+234 803 111 2299",
+    "items": [
+      {
+        "product_id": "prod-003",
+        "name": "Urban Sneakers",
+        "quantity": 2,
+        "unit_price": 14000
+      }
+    ],
+    "subtotal": 28000,
+    "total": 28000,
+    "status": "Paid",
+    "payment_method": "Transfer",
+    "issued_at": "2026-04-20T11:15:00.000Z"
+  },
+  {
+    "id": "inv-002",
+    "invoice_number": "INV-2026-002",
+    "receipt_number": "RCT-2026-002",
+    "customer_name": "The Daily Pantry",
+    "customer_email": "hello@dailypantry.ng",
+    "customer_phone": "+234 805 222 7788",
+    "items": [
+      {
+        "product_id": "prod-009",
+        "name": "Premium Zobo Mix",
+        "quantity": 12,
+        "unit_price": 1400
+      }
+    ],
+    "subtotal": 16800,
+    "total": 16800,
+    "status": "Pending",
+    "payment_method": "Paystack",
+    "issued_at": "2026-04-23T15:40:00.000Z"
+  }
+]

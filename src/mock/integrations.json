@@ -1,0 +1,54 @@
+[
+  {
+    "id": "int-001",
+    "name": "Paystack",
+    "slug": "paystack",
+    "category": "Payments",
+    "status": "Connected",
+    "description": "Accept card, bank transfer, and checkout payment links.",
+    "account_label": "Business account",
+    "account_value": "trackit-payments@demo.ng",
+    "api_key": "pk_test_trackit_demo",
+    "webhook_url": "https://trackit.local/webhooks/paystack",
+    "last_sync_at": "2026-04-24T08:00:00.000Z"
+  },
+  {
+    "id": "int-002",
+    "name": "Flutterwave",
+    "slug": "flutterwave",
+    "category": "Payments",
+    "status": "Disconnected",
+    "description": "Offer transfer and card payments with settlement tracking.",
+    "account_label": "Settlement profile",
+    "account_value": "",
+    "api_key": "",
+    "webhook_url": "https://trackit.local/webhooks/flutterwave",
+    "last_sync_at": "2026-04-16T12:20:00.000Z"
+  },
+  {
+    "id": "int-003",
+    "name": "WhatsApp Business",
+    "slug": "whatsapp-business",
+    "category": "Messaging",
+    "status": "Connected",
+    "description": "Send receipts, order confirmations, and quick payment nudges.",
+    "account_label": "Connected line",
+    "account_value": "+234 803 000 4455",
+    "api_key": "wa_demo_token_22",
+    "webhook_url": "https://trackit.local/webhooks/whatsapp",
+    "last_sync_at": "2026-04-24T07:20:00.000Z"
+  },
+  {
+    "id": "int-004",
+    "name": "Google Sheets",
+    "slug": "google-sheets",
+    "category": "Exports",
+    "status": "Disconnected",
+    "description": "Push sales, invoice, and inventory rows into a shared sheet.",
+    "account_label": "Spreadsheet",
+    "account_value": "",
+    "api_key": "",
+    "webhook_url": "",
+    "last_sync_at": "2026-04-12T09:45:00.000Z"
+  }
+]

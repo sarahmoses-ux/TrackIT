@@ -1,0 +1,42 @@
+[
+  {
+    "id": "team-001",
+    "name": "Demo User",
+    "email": "demo@trackit.ng",
+    "role": "Owner",
+    "access_level": "Full Access",
+    "status": "Active",
+    "last_active": "2026-04-24T08:30:00.000Z",
+    "joined_at": "2026-02-01T09:00:00.000Z"
+  },
+  {
+    "id": "team-002",
+    "name": "Ada Nwosu",
+    "email": "ada@trackit.ng",
+    "role": "Inventory Manager",
+    "access_level": "Inventory",
+    "status": "Active",
+    "last_active": "2026-04-24T07:15:00.000Z",
+    "joined_at": "2026-02-12T10:00:00.000Z"
+  },
+  {
+    "id": "team-003",
+    "name": "Emeka Ibrahim",
+    "email": "emeka@trackit.ng",
+    "role": "Sales Associate",
+    "access_level": "Sales",
+    "status": "Active",
+    "last_active": "2026-04-23T16:20:00.000Z",
+    "joined_at": "2026-03-03T12:00:00.000Z"
+  },
+  {
+    "id": "team-004",
+    "name": "Fatima Yusuf",
+    "email": "fatima@trackit.ng",
+    "role": "Operations Lead",
+    "access_level": "Reports",
+    "status": "Pending Invite",
+    "last_active": "2026-04-22T09:10:00.000Z",
+    "joined_at": "2026-04-10T11:00:00.000Z"
+  }
+]

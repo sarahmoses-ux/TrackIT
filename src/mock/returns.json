@@ -1,0 +1,13 @@
+[
+  {
+    "id": "ret-001",
+    "sale_id": "sale-011",
+    "product_id": "prod-007",
+    "quantity": 1,
+    "refund_amount": 11500,
+    "refund_method": "Transfer",
+    "reason": "Customer received a faulty earbud case",
+    "status": "Refunded",
+    "created_at": "2026-04-18T10:30:00.000Z"
+  }
+]

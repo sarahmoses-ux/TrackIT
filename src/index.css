@@ -1,0 +1,156 @@
+@config "../tailwind.config.js";
+@import "tailwindcss";
+
+:root {
+  --color-primary: #1a7a4a;
+  --color-primary-dark: #15623b;
+  --color-primary-light: #e8f5ee;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+  --color-text: #1c1c1e;
+  --color-muted: #6b7280;
+  --color-surface: #f9fafb;
+  --color-card: #ffffff;
+  --color-border: #e5e7eb;
+  color-scheme: light;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-surface font-body text-text antialiased;
+    min-height: 100vh;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  button {
+    @apply transition-all duration-200;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-text;
+  }
+}
+
+@layer components {
+  .panel-card {
+    @apply rounded-card border border-border bg-card shadow-card;
+  }
+
+  .section-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .hero-mesh {
+    background-image:
+      radial-gradient(circle at top left, rgba(26, 122, 74, 0.12), transparent 32%),
+      radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 28%),
+      linear-gradient(180deg, #f0fbf4 0%, #ffffff 72%);
+  }
+
+  .grid-overlay {
+    background-image:
+      linear-gradient(rgba(17, 24, 39, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(17, 24, 39, 0.04) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  .glass-chip {
+    @apply rounded-badge border border-white/60 bg-white/80 backdrop-blur;
+  }
+
+  .interactive-row {
+    @apply transition-colors duration-200 hover:bg-primary-light/50;
+  }
+
+  .table-shell {
+    @apply overflow-x-auto rounded-card border border-border bg-card shadow-card;
+  }
+
+  .modal-sheet {
+    @apply animate-fade-in rounded-card border border-border bg-card shadow-modal;
+  }
+
+  .skeleton-block {
+    background: linear-gradient(
+      90deg,
+      rgba(229, 231, 235, 0.6) 0%,
+      rgba(243, 244, 246, 0.9) 50%,
+      rgba(229, 231, 235, 0.6) 100%
+    );
+    background-size: 200% 100%;
+    @apply animate-shimmer rounded-md;
+  }
+}
+
+@layer utilities {
+  .safe-bottom {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  .print-hidden {
+    display: block;
+  }
+
+  .print-only {
+    display: none;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.35);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .print-hidden,
+  nav,
+  aside,
+  header,
+  button,
+  .mobile-nav {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block;
+  }
+
+  main,
+  .print-full {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .panel-card,
+  .table-shell {
+    box-shadow: none !important;
+    border-color: #d1d5db !important;
+  }
+}

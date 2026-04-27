@@ -1,0 +1,20 @@
+{
+  "owner_name": "Demo User",
+  "business_name": "TrackIt Demo Store",
+  "business_email": "demo@trackit.ng",
+  "phone": "+234 803 000 0000",
+  "address": "12 Admiralty Way, Lekki Phase 1",
+  "city": "Lagos",
+  "currency": "NGN",
+  "timezone": "Africa/Lagos",
+  "date_format": "DD/MM/YYYY",
+  "low_stock_threshold": 10,
+  "default_report": "Sales Report",
+  "notifications": {
+    "low_stock_alerts": true,
+    "daily_summary": true,
+    "weekly_report": true,
+    "sales_alerts": false,
+    "team_updates": true
+  }
+}

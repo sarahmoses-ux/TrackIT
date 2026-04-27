@@ -1,0 +1,72 @@
+[
+  {
+    "product_id": "prod-001",
+    "forecast_profit": 42000,
+    "predicted_low_stock_date": "2026-05-18T00:00:00.000Z",
+    "recommended_reorder_qty": 20,
+    "weekly_trend": [16000, 21000, 23000, 24500, 26000, 27200, 28500, 29800]
+  },
+  {
+    "product_id": "prod-002",
+    "forecast_profit": 38000,
+    "predicted_low_stock_date": "2026-05-11T00:00:00.000Z",
+    "recommended_reorder_qty": 12,
+    "weekly_trend": [11000, 12500, 13200, 14500, 15000, 15800, 16400, 17200]
+  },
+  {
+    "product_id": "prod-003",
+    "forecast_profit": 47000,
+    "predicted_low_stock_date": "2026-04-30T00:00:00.000Z",
+    "recommended_reorder_qty": 15,
+    "weekly_trend": [24000, 25500, 26400, 27000, 28200, 29500, 30600, 32000]
+  },
+  {
+    "product_id": "prod-004",
+    "forecast_profit": 36000,
+    "predicted_low_stock_date": "2026-05-21T00:00:00.000Z",
+    "recommended_reorder_qty": 14,
+    "weekly_trend": [15000, 16200, 17400, 18200, 19000, 19800, 20800, 22000]
+  },
+  {
+    "product_id": "prod-005",
+    "forecast_profit": 29000,
+    "predicted_low_stock_date": "2026-05-27T00:00:00.000Z",
+    "recommended_reorder_qty": 24,
+    "weekly_trend": [9000, 9800, 11000, 11800, 12900, 13700, 14400, 15000]
+  },
+  {
+    "product_id": "prod-006",
+    "forecast_profit": 41000,
+    "predicted_low_stock_date": "2026-05-07T00:00:00.000Z",
+    "recommended_reorder_qty": 18,
+    "weekly_trend": [14500, 15600, 17000, 18400, 19800, 21100, 22400, 24000]
+  },
+  {
+    "product_id": "prod-007",
+    "forecast_profit": 52000,
+    "predicted_low_stock_date": "2026-04-29T00:00:00.000Z",
+    "recommended_reorder_qty": 16,
+    "weekly_trend": [21000, 22200, 23600, 24800, 25700, 26800, 27900, 29500]
+  },
+  {
+    "product_id": "prod-008",
+    "forecast_profit": 33500,
+    "predicted_low_stock_date": "2026-05-19T00:00:00.000Z",
+    "recommended_reorder_qty": 10,
+    "weekly_trend": [12000, 12900, 13600, 14800, 15300, 16100, 17000, 18200]
+  },
+  {
+    "product_id": "prod-009",
+    "forecast_profit": 30000,
+    "predicted_low_stock_date": "2026-05-25T00:00:00.000Z",
+    "recommended_reorder_qty": 30,
+    "weekly_trend": [13500, 14000, 14600, 15500, 16100, 16900, 17600, 18400]
+  },
+  {
+    "product_id": "prod-010",
+    "forecast_profit": 26500,
+    "predicted_low_stock_date": "2026-05-01T00:00:00.000Z",
+    "recommended_reorder_qty": 22,
+    "weekly_trend": [10200, 10800, 11600, 12400, 13000, 13800, 14500, 15400]
+  }
+]

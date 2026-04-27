@@ -1,0 +1,102 @@
+[
+  {
+    "id": "prod-001",
+    "name": "Classic Cotton T-Shirt",
+    "sku": "APP-TS-001",
+    "category": "Apparel",
+    "cost_price": 1500,
+    "selling_price": 2500,
+    "stock": 24,
+    "created_at": "2026-01-12T09:00:00.000Z"
+  },
+  {
+    "id": "prod-002",
+    "name": "Slim Denim Jeans",
+    "sku": "APP-JN-002",
+    "category": "Apparel",
+    "cost_price": 4200,
+    "selling_price": 7600,
+    "stock": 15,
+    "created_at": "2026-01-16T09:00:00.000Z"
+  },
+  {
+    "id": "prod-003",
+    "name": "Urban Sneakers",
+    "sku": "FTW-SN-003",
+    "category": "Footwear",
+    "cost_price": 8000,
+    "selling_price": 14000,
+    "stock": 8,
+    "created_at": "2026-01-20T09:00:00.000Z"
+  },
+  {
+    "id": "prod-004",
+    "name": "Leather Sandals",
+    "sku": "FTW-SA-004",
+    "category": "Footwear",
+    "cost_price": 3500,
+    "selling_price": 6500,
+    "stock": 18,
+    "created_at": "2026-01-23T09:00:00.000Z"
+  },
+  {
+    "id": "prod-005",
+    "name": "Gold Hoop Earrings",
+    "sku": "ACC-EA-005",
+    "category": "Accessories",
+    "cost_price": 900,
+    "selling_price": 2200,
+    "stock": 31,
+    "created_at": "2026-01-25T09:00:00.000Z"
+  },
+  {
+    "id": "prod-006",
+    "name": "Crossbody Handbag",
+    "sku": "ACC-BG-006",
+    "category": "Accessories",
+    "cost_price": 5200,
+    "selling_price": 9800,
+    "stock": 12,
+    "created_at": "2026-01-28T09:00:00.000Z"
+  },
+  {
+    "id": "prod-007",
+    "name": "Bluetooth Earbuds",
+    "sku": "ELC-EA-007",
+    "category": "Electronics",
+    "cost_price": 6500,
+    "selling_price": 11500,
+    "stock": 9,
+    "created_at": "2026-02-02T09:00:00.000Z"
+  },
+  {
+    "id": "prod-008",
+    "name": "Portable Power Bank",
+    "sku": "ELC-PB-008",
+    "category": "Electronics",
+    "cost_price": 4800,
+    "selling_price": 8500,
+    "stock": 21,
+    "created_at": "2026-02-04T09:00:00.000Z"
+  },
+  {
+    "id": "prod-009",
+    "name": "Premium Zobo Mix",
+    "sku": "FDB-ZB-009",
+    "category": "Food & Beverage",
+    "cost_price": 700,
+    "selling_price": 1400,
+    "stock": 42,
+    "created_at": "2026-02-10T09:00:00.000Z"
+  },
+  {
+    "id": "prod-010",
+    "name": "Chocolate Granola Jar",
+    "sku": "FDB-GR-010",
+    "category": "Food & Beverage",
+    "cost_price": 1100,
+    "selling_price": 2400,
+    "stock": 6,
+    "created_at": "2026-02-13T09:00:00.000Z"
+  }
+]
