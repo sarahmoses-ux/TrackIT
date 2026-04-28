@@ -1,7 +1,7 @@
 const API_KEY = import.meta.env.VITE_GROK_API_KEY;
 const API_URL = import.meta.env.VITE_GROK_API_URL;
 const MODEL = "llama-3.1-8b-instant";
-
+ 
 // Strip markdown code fences that Grok sometimes wraps around JSON responses
 function extractJSON(text) {
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
