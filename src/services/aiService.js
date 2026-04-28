@@ -11,6 +11,7 @@ function extractJSON(text) {
 async function callGrok(messages) {
   if (!API_KEY || API_KEY.startsWith("your_")) {
     throw new Error("VITE_GROK_API_KEY is not configured in .env");
+    
   }
 
   const response = await fetch(API_URL, {
